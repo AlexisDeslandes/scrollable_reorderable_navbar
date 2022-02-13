@@ -66,16 +66,19 @@ import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart
 ## Custom usage
 
 There are options that let you custom the navbar:\
-List<NavBarItem> items | Items composing the navbar, every items should have different names\
-int selectedIndex | The index of the selected [NavBarItem]\
-ValueChanged<int> onItemTap | Which behaviour should have after the user tap on a [NavBarItem]\
-ReorderCallback onReorder | Which behaviour should have after user swap 2 [NavBarItem]\
-Widget deleteIndicationWidget | The [Widget] displayed on top of the delete overlay to show user that he can tap on [NavBarItem] to delete them\
-ValueChanged<int> onDelete | Which behaviour should have after user delete a [NavBarItem]\
-ReorderItemProxyDecorator? proxyDecorator | How the widget should look like on a reorder operation\
-Color backgroundColor | Background color of the navbar\
-Duration duration | Duration of the animations\
-BoxDecoration? decoration | Decoration of the entire navbar. You should use either [backgroundColor] or this one\
+
+|  Properties  |   Description   |
+|--------------|-----------------|
+| `List<NavBarItem> items` | Items composing the navbar, every items should have different names |
+| `int selectedIndex` | The index of the selected `NavBarItem`|
+| `ValueChanged<int> onItemTap` | Which behaviour should have after the user tap on a `NavBarItem` |
+| `ReorderCallback onReorder` | Which behaviour should have after user swap 2 `NavBarItem` |
+| `Widget deleteIndicationWidget` | The `Widget` displayed on top of the delete overlay to show user that he can tap on `NavBarItem` to delete them |
+| `ValueChanged<int> onDelete` | Which behaviour should have after user delete a `NavBarItem` |
+| `ReorderItemProxyDecorator? proxyDecorator` | How the widget should look like on a reorder operation |
+| `Color backgroundColor` | Background color of the navbar |
+| `Duration duration` | Duration of the animations |
+| `BoxDecoration? decoration` | Decoration of the entire navbar. You should use either `backgroundColor` or this one |
 
 ## Additional information
 
