@@ -12,9 +12,9 @@ class ConditionWidget extends StatelessWidget {
 
   const ConditionWidget(
       {Key? key,
-        required this.appear,
-        required this.appearWidgetCallback,
-        this.replaceWidgetCallback = _emptyCallback})
+      required this.appear,
+      required this.appearWidgetCallback,
+      this.replaceWidgetCallback = _emptyCallback})
       : super(key: key);
 
   static Widget _emptyCallback() => const SizedBox();

@@ -11,16 +11,16 @@ import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart
 class ScrollableReorderableNavBar extends StatelessWidget {
   const ScrollableReorderableNavBar(
       {Key? key,
-        required this.items,
-        required this.onItemTap,
-        required this.onReorder,
-        required this.selectedIndex,
-        required this.onDelete,
-        required this.deleteIndicationWidget,
-        this.backgroundColor = Colors.white,
-        this.duration = const Duration(milliseconds: 300),
-        this.proxyDecorator,
-        this.decoration})
+      required this.items,
+      required this.onItemTap,
+      required this.onReorder,
+      required this.selectedIndex,
+      required this.onDelete,
+      required this.deleteIndicationWidget,
+      this.backgroundColor = Colors.white,
+      this.duration = const Duration(milliseconds: 300),
+      this.proxyDecorator,
+      this.decoration})
       : super(key: key);
 
   /// Every items should have different names
@@ -136,7 +136,7 @@ class _ScrollableReorderableNavBarState
     return ReorderableListView.builder(
         scrollController: _controller,
         proxyDecorator: widget.proxyDecorator ??
-                (child, index, animation) => ScaleTransition(
+            (child, index, animation) => ScaleTransition(
                 scale: animation.drive(Tween(begin: 1.0, end: 1.5)),
                 child: child),
         itemCount: _items.length,
@@ -144,9 +144,9 @@ class _ScrollableReorderableNavBarState
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           final shouldAddMargin =
-              index == 0 && _items.length > _maxItemDisplayed,
+                  index == 0 && _items.length > _maxItemDisplayed,
               margin =
-              EdgeInsets.only(left: shouldAddMargin ? _cellSize / 2 : 0),
+                  EdgeInsets.only(left: shouldAddMargin ? _cellSize / 2 : 0),
               item = _items[index];
           return _ReorderableItemWrapper(
               key: ValueKey("_ReorderableItem${item.name}"),
@@ -215,14 +215,14 @@ class _ScrollableReorderableNavBarState
 class _ReorderableItemWrapper extends StatelessWidget {
   const _ReorderableItemWrapper(
       {Key? key,
-        required this.index,
-        required this.item,
-        required this.width,
-        required this.deleteModeCallback,
-        required this.margin,
-        required this.onTap,
-        required this.selected,
-        required this.animationDuration})
+      required this.index,
+      required this.item,
+      required this.width,
+      required this.deleteModeCallback,
+      required this.margin,
+      required this.onTap,
+      required this.selected,
+      required this.animationDuration})
       : super(key: key);
 
   final int index;
@@ -254,5 +254,3 @@ class _ReorderableItemWrapper extends StatelessWidget {
     );
   }
 }
-
-

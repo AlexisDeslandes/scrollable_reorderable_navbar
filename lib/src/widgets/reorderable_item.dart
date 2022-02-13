@@ -15,12 +15,16 @@ class ReorderableItem extends StatelessWidget {
 
   /// Index of the item in the item list
   final int index;
+
   /// Item that is used as Widget and name
   final NavBarItem item;
+
   /// Duration of the switcher animation
   final Duration animationDuration;
+
   /// If true, shows [item.name]
   final bool selected;
+
   /// Event that is triggered on widget tap
   final VoidCallback onTap;
 
