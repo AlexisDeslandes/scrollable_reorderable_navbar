@@ -3,7 +3,7 @@
 A flutter plugin for create bottom nav bar that can be scrolled when there are than 5 nav items to display. It also let user swipe items position and item can be deleted from the navbar.
 
 <p align="center">
-  <img src="https://www.zupimages.net/up/22/06/mku1.gif">
+  <img src="https://www.zupimages.net/up/22/06/mg0h.gif">
 </p>
 
 ## Installing:
