@@ -29,10 +29,14 @@ class BottomNavBarPage extends StatefulWidget {
 
 class _BottomNavBarPageState extends State<BottomNavBarPage> {
   int _selectedIndex = 0;
-  List<NavBarItem> _items = List.generate(
-      10,
-      (index) =>
-          NavBarItem(widget: const Icon(Icons.group), name: "Item $index"));
+  List<NavBarItem> _items = const [
+    NavBarItem(widget: Icon(Icons.home), name: "Home"),
+    NavBarItem(widget: Icon(Icons.group), name: "Social"),
+    NavBarItem(widget: Icon(Icons.call), name: "Calls"),
+    NavBarItem(widget: Icon(Icons.image), name: "Pictures"),
+    NavBarItem(widget: Icon(Icons.message), name: "Messages"),
+    NavBarItem(widget: Icon(Icons.settings), name: "Settings")
+  ];
 
   @override
   Widget build(BuildContext context) {
