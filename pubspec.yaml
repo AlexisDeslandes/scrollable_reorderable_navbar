@@ -1,6 +1,6 @@
 name: scrollable_reorderable_navbar
 description: A bottom nav bar that can be scrolled when there are than 5 nav items to display. It also let user swipe items position and item can be deleted from the navbar.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/AlexisDeslandes/scrollable_reorderable_navbar
 
 environment:
