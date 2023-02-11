@@ -10,19 +10,19 @@ import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart
 /// It also let user swipe position of items and delete items from the navbar.
 ///
 class ScrollableReorderableNavBar extends StatelessWidget {
-  const ScrollableReorderableNavBar(
-      {Key? key,
-      required this.items,
-      required this.onItemTap,
-      required this.onReorder,
-      required this.selectedIndex,
-      required this.onDelete,
-      required this.deleteIndicationWidget,
-      this.backgroundColor = Colors.white,
-      this.duration = const Duration(milliseconds: 300),
-      this.proxyDecorator,
-      this.decoration})
-      : super(key: key);
+  const ScrollableReorderableNavBar({
+    Key? key,
+    required this.items,
+    required this.onItemTap,
+    required this.selectedIndex,
+    this.deleteIndicationWidget,
+    this.backgroundColor = Colors.white,
+    this.duration = const Duration(milliseconds: 300),
+    this.proxyDecorator,
+    this.decoration,
+    this.onReorder,
+    this.onDelete,
+  }) : super(key: key);
 
   /// Every items should have different names
   final List<NavBarItem> items;
@@ -34,14 +34,14 @@ class ScrollableReorderableNavBar extends StatelessWidget {
   final ValueChanged<int> onItemTap;
 
   /// Which behaviour should have after user swap 2 [NavBarItem]
-  final ReorderCallback onReorder;
+  final ReorderCallback? onReorder;
 
   /// The [Widget] displayed on top of the delete overlay
   /// to show user that he can tap on [NavBarItem] to delete them
-  final Widget deleteIndicationWidget;
+  final Widget? deleteIndicationWidget;
 
   /// Which behaviour should have after user delete a [NavBarItem]
-  final ValueChanged<int> onDelete;
+  final ValueChanged<int>? onDelete;
 
   /// How the widget should look like on a reorder operation
   final ReorderItemProxyDecorator? proxyDecorator;
@@ -59,10 +59,13 @@ class ScrollableReorderableNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: decoration ??
-            BoxDecoration(boxShadow: const [
-              BoxShadow(
-                  color: Colors.black12, offset: Offset(0, -1), blurRadius: 8)
-            ], color: backgroundColor),
+            BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.black12, offset: Offset(0, -1), blurRadius: 8)
+              ],
+              color: backgroundColor,
+            ),
         width: MediaQuery.of(context).size.width,
         height: kBottomNavigationBarHeight +
             MediaQuery.of(context).viewPadding.bottom,
@@ -84,11 +87,11 @@ class _ScrollableReorderableNavBar extends StatefulWidget {
   const _ScrollableReorderableNavBar({
     Key? key,
     required this.onItemTap,
-    required this.onDelete,
-    required this.onReorder,
     required this.animationDuration,
     required this.selectedIndex,
-    required this.deleteIndicationWidget,
+    this.deleteIndicationWidget,
+    this.onReorder,
+    this.onDelete,
     this.items = const [],
     this.backgroundColor,
     this.proxyDecorator,
@@ -98,11 +101,11 @@ class _ScrollableReorderableNavBar extends StatefulWidget {
   final List<NavBarItem> items;
   final Color? backgroundColor;
   final ValueChanged<int> onItemTap;
-  final ValueChanged<int> onDelete;
-  final ReorderCallback onReorder;
+  final ValueChanged<int>? onDelete;
+  final ReorderCallback? onReorder;
   final Duration animationDuration;
   final ReorderItemProxyDecorator? proxyDecorator;
-  final Widget deleteIndicationWidget;
+  final Widget? deleteIndicationWidget;
 
   @override
   _ScrollableReorderableNavBarState createState() =>
@@ -134,38 +137,69 @@ class _ScrollableReorderableNavBarState
 
   @override
   Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-        scrollController: _controller,
-        proxyDecorator: widget.proxyDecorator ??
-            (child, index, animation) => ScaleTransition(
-                scale: animation.drive(Tween(begin: 1.0, end: 1.5)),
-                child: child),
-        itemCount: _items.length,
-        onReorder: widget.onReorder,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          final shouldAddMargin =
-                  index == 0 && _items.length > _maxItemDisplayed,
-              margin =
-                  EdgeInsets.only(left: shouldAddMargin ? _cellSize / 2 : 0),
-              item = _items[index];
-          return _ReorderableItemWrapper(
-              key: ValueKey("_ReorderableItem${item.name}"),
+    final onReorder = widget.onReorder;
+    final padding = _items.length > _maxItemDisplayed
+        ? EdgeInsets.only(left: _cellSize / 2)
+        : null;
+    final onDelete = widget.onDelete;
+    final triggerDeleteMode = onDelete != null
+        ? () {
+            if (!_deleteMode) {
+              _displayDeleteModeOverlay();
+              _deleteMode = true;
+            }
+          }
+        : null;
+
+    VoidCallback onTap(int index) =>
+        _deleteMode ? () => onDelete?.call(index) : () => _onItemTap(index);
+
+    Key getKey(NavBarItem item) =>
+        ValueKey("_NavBarDeletableWidget${item.name}");
+
+    if (onReorder != null) {
+      return ReorderableListView.builder(
+          scrollController: _controller,
+          padding: padding,
+          proxyDecorator: widget.proxyDecorator ??
+              (child, index, animation) => ScaleTransition(
+                  scale: animation.drive(Tween(begin: 1.0, end: 1.5)),
+                  child: child),
+          itemCount: _items.length,
+          onReorder: onReorder,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            final item = _items[index];
+            return _NavBarDeletableWidget(
+              key: getKey(item),
               index: index,
               item: item,
-              width: _cellSize + margin.left,
-              deleteModeCallback: () {
-                if (!_deleteMode) {
-                  _displayDeleteModeOverlay();
-                  _deleteMode = true;
-                }
-              },
-              margin: margin,
-              onTap: _deleteMode
-                  ? () => widget.onDelete(index)
-                  : () => _onItemTap(index),
+              width: _cellSize,
+              triggerDeleteMode: triggerDeleteMode,
+              onTap: onTap(index),
               selected: index == widget.selectedIndex,
-              animationDuration: widget.animationDuration);
+              animationDuration: widget.animationDuration,
+            );
+          });
+    }
+
+    return ListView.builder(
+        controller: _controller,
+        padding: padding,
+        itemCount: _items.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final item = _items[index];
+          return _NavBarDeletableWidget(
+            key: getKey(item),
+            index: index,
+            item: item,
+            width: _cellSize,
+            triggerDeleteMode: triggerDeleteMode,
+            onTap: onTap(index),
+            selected: index == widget.selectedIndex,
+            animationDuration: widget.animationDuration,
+          );
         });
   }
 
@@ -210,48 +244,44 @@ class _ScrollableReorderableNavBarState
 }
 
 ///
-/// Wrapper for [_ReorderableItem], it adds the DeleteMode listener
-/// and a width to this [Widget].
+/// [NavBarWidget] that can be deleted
+/// when [triggerDeleteMode] is not null.
 ///
-class _ReorderableItemWrapper extends StatelessWidget {
-  const _ReorderableItemWrapper(
-      {Key? key,
-      required this.index,
-      required this.item,
-      required this.width,
-      required this.deleteModeCallback,
-      required this.margin,
-      required this.onTap,
-      required this.selected,
-      required this.animationDuration})
-      : super(key: key);
+class _NavBarDeletableWidget extends StatelessWidget {
+  const _NavBarDeletableWidget({
+    Key? key,
+    required this.index,
+    required this.item,
+    required this.width,
+    required this.onTap,
+    required this.selected,
+    required this.animationDuration,
+    this.triggerDeleteMode,
+  }) : super(key: key);
 
   final int index;
   final NavBarItem item;
   final double width;
-  final VoidCallback deleteModeCallback;
-  final EdgeInsets margin;
+  final VoidCallback? triggerDeleteMode;
   final VoidCallback onTap;
   final bool selected;
   final Duration animationDuration;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: DeleteModeItemListener(
-        deleteModeCallback: deleteModeCallback,
-        child: Padding(
-          padding: margin,
-          child: ReorderableItem(
-            index: index,
-            item: item,
-            onTap: onTap,
-            selected: selected,
-            animationDuration: animationDuration,
-          ),
-        ),
-      ),
+    Widget navBarWidget = NavBarWidget(
+      index: index,
+      item: item,
+      onTap: onTap,
+      selected: selected,
+      animationDuration: animationDuration,
     );
+    if (triggerDeleteMode != null) {
+      navBarWidget = DeleteModeTriggerWidget(
+        child: navBarWidget,
+        onTrigger: triggerDeleteMode!,
+      );
+    }
+    return SizedBox(child: navBarWidget, width: width);
   }
 }

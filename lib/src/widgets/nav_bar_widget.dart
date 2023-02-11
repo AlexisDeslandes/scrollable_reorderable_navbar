@@ -3,8 +3,8 @@ import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart
 
 /// [Widget] use to catch user interaction with [NavBarItem.widget].
 /// It shows the [NavBarItem.name] when [selected] is true.
-class ReorderableItem extends StatelessWidget {
-  const ReorderableItem({
+class NavBarWidget extends StatelessWidget {
+  const NavBarWidget({
     Key? key,
     required this.index,
     required this.item,
