@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scrollable_reorderable_navbar/scrollable_reorderable_navbar.dart';
 
@@ -188,7 +189,7 @@ class _ScrollableReorderableNavBarState
             height: MediaQuery.of(context).size.height -
                 (kBottomNavigationBarHeight +
                     MediaQuery.of(context).viewPadding.bottom)));
-    Overlay.of(context)!.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
   }
 
   /// When user tap on a a nav item, the nav bar try to scroll
